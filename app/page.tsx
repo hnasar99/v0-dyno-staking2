@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -7,8 +8,13 @@ import { ArrowRight, Shield, TrendingUp, Heart, Users, Zap, Globe, ChevronRight 
 import { BackgroundVideo } from "@/components/background-video"
 import { WalletConnectButton } from "@/components/web3/wallet-connect-button"
 import { StakingDashboard } from "@/components/web3/staking-dashboard"
+import { RoleSelector } from "@/components/auth/role-selector"
+import { AdminDashboard } from "@/components/admin/admin-dashboard"
+import { UserDashboard } from "@/components/user/user-dashboard"
 
 export default function DynoSocialLanding() {
+  const [userRole, setUserRole] = useState<"user" | "admin" | null>(null)
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -64,14 +70,14 @@ export default function DynoSocialLanding() {
               className="bg-primary hover:bg-primary/90"
               onClick={() => document.getElementById("dashboard")?.scrollIntoView({ behavior: "smooth" })}
             >
-              Start Earning <ArrowRight className="ml-2 h-4 w-4" />
+              Acceder al Dashboard <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             <Button
               size="lg"
               variant="outline"
               onClick={() => document.getElementById("staking")?.scrollIntoView({ behavior: "smooth" })}
             >
-              How It Works
+              Cómo Funciona
             </Button>
           </div>
 
@@ -226,7 +232,7 @@ export default function DynoSocialLanding() {
                   className="w-full bg-primary hover:bg-primary/90"
                   onClick={() => document.getElementById("dashboard")?.scrollIntoView({ behavior: "smooth" })}
                 >
-                  Start Staking Now
+                  Comenzar Staking
                 </Button>
               </CardContent>
             </Card>
@@ -237,13 +243,30 @@ export default function DynoSocialLanding() {
       <section id="dashboard" className="py-20 px-4 bg-muted/30">
         <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Staking Dashboard</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Dashboard</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Connect your wallet to start earning with DStake tokens. Mint, stake, and claim rewards all in one place.
+              Selecciona tu rol para acceder al dashboard correspondiente
             </p>
           </div>
 
-          <StakingDashboard />
+          {/* Role Selector */}
+          <div className="mb-12">
+            <RoleSelector onRoleSelect={setUserRole} currentRole={userRole} />
+          </div>
+
+          {/* Dashboard based on role */}
+          {userRole === "admin" && <AdminDashboard />}
+          {userRole === "user" && <UserDashboard />}
+          {!userRole && (
+            <Card className="w-full max-w-2xl mx-auto">
+              <CardHeader className="text-center">
+                <CardTitle>Bienvenido a Dyno Staking</CardTitle>
+                <CardDescription>
+                  Selecciona tu rol arriba para acceder a las funcionalidades correspondientes
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          )}
         </div>
       </section>
 
@@ -378,7 +401,7 @@ export default function DynoSocialLanding() {
               variant="secondary"
               onClick={() => document.getElementById("dashboard")?.scrollIntoView({ behavior: "smooth" })}
             >
-              Get Started <ChevronRight className="ml-2 h-4 w-4" />
+              Comenzar <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
             <Button
               size="lg"
@@ -386,7 +409,7 @@ export default function DynoSocialLanding() {
               className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary bg-transparent"
               onClick={() => document.getElementById("staking")?.scrollIntoView({ behavior: "smooth" })}
             >
-              Learn More
+              Saber Más
             </Button>
           </div>
         </div>
